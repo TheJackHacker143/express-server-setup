@@ -5,10 +5,5 @@ app.use("/welcome",(req,res,next)=>{
     console.log(req.noDelay)
     res.send(`<h1>welcome ${req.user}</h1>`)
 })
-// app.get("/welcome",(req,res,next)=>{
-//    req.user="guest"
-//     console.log(req.user)
-//     res.send(`<h1>welcome ${req.user}</h1>`)
-// })
 
 app.listen(3000)
