@@ -1,0 +1,30 @@
+arr=[4,2,0,3,2,5]
+let major=[]
+let minor=[]
+let addition=0
+for(let key of arr){
+    if(major.length==0){
+        major.push(key)
+    }
+    else if(key<major[major.length-1]){
+        minor.push(key)
+    }
+    else if(key>major[major.length-1]){
+        while(minor.length>0){
+            let x=minor.pop()
+            let y=major[major.length-1]-x
+            addition+=y
+        }
+        major.push(key)
+    }
+}
+while(minor.length>0){
+    let m=minor.pop()
+    if(m>minor[minor.length-1]){
+        let z=m-minor[minor.length-1]
+        addition+=z
+        minor.pop()
+        minor.push(m)
+    }
+}
+console.log(addition)

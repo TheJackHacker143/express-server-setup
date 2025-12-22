@@ -1,0 +1,8 @@
+{
+    "workbench.localHistory.maxFileSize": 1000000000000,
+    "workbench.localHistory.maxFileEntries": 10000000,
+    "workbench.localHistory.mergeWindow": 10000000000,
+    "git.useCommitInputAsStashMessage": true,
+    "editor.multiCursorPaste": "full",
+    "notebook.multiCursor.enabled": true
+}

@@ -1,0 +1,28 @@
+nums=[1,2,3,4,5]
+let target=1;
+var tar=nums.indexOf(target);
+var l=1
+var h=nums.length
+var m;
+var n;
+while(l<=h){
+n=((l+h)/2)-(1)
+if(((l+h)%2)==0){
+    m=n
+}
+else{
+    m=n-0.5
+}
+if(tar==m){
+    console.log(m)
+}
+else if(tar<m){
+h=m-1;
+}
+else{
+    l=m+1
+}
+}
+while(l<=h){
+    return -1;
+}
