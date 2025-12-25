@@ -1,0 +1,11 @@
+const express=require("express")
+const app=express()
+const user=require("./routers/userRoutes")
+const product=require("./routers/productRoutes")
+const cart=require("./routers/cartRoutes")
+app.use("/users",user)
+app.use("/products",product)
+app.use("/cart",cart)
+app.listen(3000,()=>{
+    console.log("server is running")
+})
