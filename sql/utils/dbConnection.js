@@ -26,6 +26,33 @@ connection.execute(createquery,(err)=>{
     }
     console.log("table created")
 })
+const createquery2=` create table if not exists users (
+id int auto_increment primary key,
+name varchar(20),
+email varchar(20)
+); `   
+connection.execute(createquery2,(err)=>{
+    if(err){
+        console.log(err);
+        connection.end();
+        return;
+    }
+    console.log("table created2")
+})
+const createquery3=` create table if not exists buses (
+id int auto_increment primary key,
+buscount int,
+availableSeats int
+); `   
+connection.execute(createquery3,(err)=>{
+    if(err){
+        console.log(err);
+        connection.end();
+        return;
+    }
+    console.log("table created3")
+})
+
 })
 module.exports=connection;
 
