@@ -8,12 +8,16 @@ const Students=sequelize.define('Students',{
         allowNull:false
 
     },
-    name:{
+    expense:{
 type:DataTypes.STRING,
 allowNull:false
     },
-    email:{
+    description:{
         
+type:DataTypes.STRING,
+allowNull:false
+    },
+    category:{
 type:DataTypes.STRING,
 allowNull:false
     }

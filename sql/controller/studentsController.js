@@ -1,14 +1,17 @@
  const db=require("../utils/dbConnection")
  const Student= require("../models/students")
+ //const project2=require("../../project2/project2")
 const addentries=async (req,res)=>{
     try {
-        const {email,name}=req.body
+        const {expense,description,category}=req.body
     
        const student= await Student.create({
-        name:name,
-        email:email
+        expense:expense,
+        description:description,
+        category:category
+        
        })
-       res.status(201).send(`user ${name}inserted`)
+       res.status(201).json(student)
     } catch (error) {
         res.status(500).send("unable to entry")
     }
@@ -16,13 +19,16 @@ const addentries=async (req,res)=>{
 }
 const updateEntry=async (req,res)=>{
     try {
-        const {name}=req.body
-    const id=req.params.id
+        const {expense,description,category}=req.body
+        const id=req.params.id
+    
        const student= await Student.findByPk(id)
        if(!student) {res.status(404).send("user mot found")}
-       student.name=name
+       student.expense=expense
+       student.description=description
+       student.category=category
     await student.save();
-       res.status(200).send(`user ${name} has been updated`)
+       res.status(200).json(student)
     } catch (error) {
         res.status(500).send("unable to upadte")
     }
@@ -30,7 +36,7 @@ const updateEntry=async (req,res)=>{
 }
 const deleteEntry=async (req,res)=>{
         try {
-        const {name}=req.body
+        
     const id=req.params.id
        const student= await Student.destroy({
         where:{
@@ -39,25 +45,19 @@ const deleteEntry=async (req,res)=>{
        })
        if(!student) {res.status(404).send("user mot found")}
 
-       res.status(200).send(`user ${name} has been deleted`)
+       res.status(200).send("delted")
     } catch (error) {
         res.status(500).send("unable to delete")
     }
 
 }
 const reteriveEntry=async (req,res)=>{
-    try {
-        const {email,name}=req.body
-    
-       const student= await Student.create({
-        name:name,
-        email:email
-       })
-       res.status(201).send(`user ${name}inserted`)
-    } catch (error) {
-        res.status(500).send("unable to entry")
-    }
-
+   try {
+    const student = await Student.findAll(); // ✅ pura table
+    res.json(student); // frontend ko bhej diya
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch users" });
+  } 
 }
 
 
