@@ -1,5 +1,9 @@
  const db=require("../utils/dbConnection")
  const Student= require("../models/students")
+ const Identitycard=require("../models/identityCard")
+ const Student1= require("../models/students1")
+
+
  //const project2=require("../../project2/project2")
 const addentries=async (req,res)=>{
     try {
@@ -16,6 +20,23 @@ const addentries=async (req,res)=>{
         res.status(500).send("unable to entry")
     }
 
+}
+
+const addValStudentsAndIdentitycardTable=async (req,res)=>{
+    
+     try {
+        const student1= await Student1.create(req.body.student1)
+        console .log("hii",student1.id)
+        const Idcard=await Identitycard.bulkCreate(
+            req.body.Idcard.map(card=>({
+                ...card, Students1Id:student1.id
+            })),
+            
+        )
+        res.status(201).json({student1,Idcard})
+    } catch (error) {
+        res.status(500).json({error:error.message})
+    }
 }
 const updateEntry=async (req,res)=>{
     try {
@@ -61,7 +82,7 @@ const reteriveEntry=async (req,res)=>{
 }
 
 
- module.exports={addentries,updateEntry,deleteEntry,reteriveEntry}
+ module.exports={addentries,updateEntry,deleteEntry,reteriveEntry,addValStudentsAndIdentitycardTable}
 
 
 
