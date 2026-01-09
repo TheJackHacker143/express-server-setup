@@ -7,8 +7,8 @@ const cardSection = document.getElementById("cardSection");
 const submitBtn = document.getElementById("add");
 const totalExpense = document.getElementById("totalExpense")
 
-const API_BASE = "https://crudcrud.com/api/1757eb5e54124a98bae39e86c1d0b94d"; 
-const RESOURCE = "expense";
+const API_BASE = "http://localhost:3000"; 
+const RESOURCE = "students";
 const ENDPOINT = `${API_BASE}/${RESOURCE}`;
 
 
@@ -32,7 +32,7 @@ async function updateItem(id, data) {
 async function deleteItem(id) {
   await axios.delete(`${ENDPOINT}/${id}`);
 }
-/
+
 
 // Load existing data from server on page load
 (async function loadFromServer() {
@@ -42,7 +42,7 @@ async function deleteItem(id) {
   try {
     const items = await fetchAllItems();
     items.forEach(item => {
-      const card = createCard(item.expense, item.description, item.category, item._id);
+      const card = createCard(item.expense, item.description, item.category, item.id);
       cardSection.appendChild(card);
     });
   } catch (err) {
@@ -79,7 +79,7 @@ form.addEventListener('submit', async function (e) {
     } else {
       // CREATE new on server
       const saved = await createItem(data); // saved has _id
-      const card = createCard(saved.expense, saved.description, saved.category, saved._id);
+      const card = createCard(saved.expense, saved.description, saved.category, saved.id);
       cardSection.appendChild(card);
     }
     const items = await fetchAllItems();
@@ -102,7 +102,7 @@ function createCard(expensevalue, descriptionvalue, categoryvalue, key) {
   card.classList.add('card');
   card.setAttribute('data-key', key);
 
-  card.innerHTML = ` <span>${escapeHtml(categoryvalue)}</span><span><img src="${escapeHtml(expensevalue)}" alt="Blog Image"></span><strong> ${escapeHtml(descriptionvalue)}</strong>`;
+  card.innerHTML = ` <span>${escapeHtml(categoryvalue)}</span><span>${escapeHtml(expensevalue)}</span><strong> ${escapeHtml(descriptionvalue)}</strong>`;
 
   // delete button
   const deleteBtn = document.createElement("button");
