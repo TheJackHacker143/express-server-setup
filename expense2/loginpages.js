@@ -5,11 +5,11 @@ const Password=document.getElementById("password");
 const cardsection=document.getElementById("cardSection")
 //api configuration
 const API_BASE = "http://localhost:3000";
-const ENDPOINT = `${API_BASE}/expense/login`;
+const ENDPOINT = `${API_BASE}/users/login`;
 
 //api functions
-async function fetchAllItems(data) {
-  const res = await axios.get(ENDPOINT,data);
+async function fetchAllItems() {
+  const res = await axios.get(ENDPOINT);
   return res.data;
 }
 
@@ -27,13 +27,22 @@ cardsection.innerHTML="";
     };
     try {
   const saved = await createItem(data)
+  
   cardsection.innerHTML = `<span>${saved.message}</span>`
-  alert(saved.message);
+  alert(saved.token);
+   if (saved.success === true) {
+    
+  localStorage.setItem("userId",saved.token);
+      window.location.href = `http://127.0.0.1:5500/expense2/expense.html?userId=${saved.token}`;
+    }
 } catch (error) {
   cardsection.innerHTML = `<span>${error.message}</span>`
 }
 Email.value=""
 Password.value=""
+
+  // Redirect to your local HTML page
+  //window.location.href = "http://127.0.0.1:5500/project2/project2.html";
 
   })
 

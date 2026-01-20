@@ -6,7 +6,7 @@ const Password=document.getElementById("password");
 const cardsection=document.getElementById("cardSection")
 //api configuration
 const API_BASE = "http://localhost:3000";
-const ENDPOINT = `${API_BASE}/expense/signup`;
+const ENDPOINT = `${API_BASE}/users/signup`;
 
 //api functions
 async function fetchAllItems() {
@@ -29,6 +29,7 @@ cardsection.innerHTML="";
     };
     try {
   const saved = await createItem(data)
+  
 } catch (error) {
   cardsection.innerHTML = `<span>user already exists</span>`
 }
@@ -36,6 +37,8 @@ Name.value=""
 Email.value=""
 Password.value=""
 
+  // Redirect to your local HTML page
+  window.location.href = "http://127.0.0.1:5500/expense2/loginpage.html";
   })
 
 

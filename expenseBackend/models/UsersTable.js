@@ -1,6 +1,6 @@
 const{DataTypes}=require("sequelize");
 const sequelize=require("../dbconnection")
-const Expenses=sequelize.define('Expenses',{
+const Users=sequelize.define('Users',{
     name:{
 type:DataTypes.STRING,
 allowNull:true
@@ -16,5 +16,5 @@ type:DataTypes.STRING,
 allowNull:true
     }
 })
-console.log("expense table created")
-module.exports=Expenses;
+console.log("users table created")
+module.exports=Users;
