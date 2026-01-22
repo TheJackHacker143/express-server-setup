@@ -8,6 +8,8 @@ require("./models/userToexpense");
 const dotenv = require("dotenv");
 const path = require("path");
 const { GoogleGenAI } = require("@google/genai");
+require("./models/ForgotPasswordRequests")
+require("./models/userToForgotPasswordRequests")
 
 dotenv.config();
 const OpenAI = require("openai");
@@ -71,6 +73,9 @@ app.post("/ask", async (req, res) => {
 app.use("/users",usersRoutes)
 
 app.use("/expense",expenseRoutes)
+app.use("/password",require("./routers/forgetpasswordrouter"))
+
+
 // db.query("SET FOREIGN_KEY_CHECKS = 0")
 //   .then(() => {
 //     return db.sync({ force: true });
@@ -85,11 +90,11 @@ app.use("/expense",expenseRoutes)
 //   });
 
 
-db.sync({alter:true}).then(()=>{
+db.sync({force:false}).then(()=>{
 
 app.listen(3000,(er)=>{
     console.log("erver is running")
-  console.log("Loaded Key:", process.env.GEMINI_API_KEY ? "Exists" : "Missing");
+  console.log("Loaded Key:", process.env.OPENAI_API_KEY ? "Exists" : "Missing");
 })
 }).catch((err)=>{
     console.log(err)

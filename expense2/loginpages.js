@@ -3,9 +3,17 @@ const form=document.getElementById("postform");
 const Email=document.getElementById("email");
 const Password=document.getElementById("password");
 const cardsection=document.getElementById("cardSection")
+const forgotpassbtn=document.getElementById("forgotpass")
+
+
 //api configuration
 const API_BASE = "http://localhost:3000";
 const ENDPOINT = `${API_BASE}/users/login`;
+//forgot password event
+forgotpassbtn.addEventListener('click',async function(){
+alert("Forgot Password Clicked")
+window.location.href = 'http://127.0.0.1:5500/expense2/forgetmail.html'
+})
 
 //api functions
 async function fetchAllItems() {
