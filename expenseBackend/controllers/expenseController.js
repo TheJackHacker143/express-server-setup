@@ -9,13 +9,14 @@
 const addentries=async (req,res)=>{
     try {
         
-        const {expense,description,category}=req.body
-    //const decoded=jswt.verify(userId, 'secretkey');
+        const {expense,description,category,userId}=req.body
+    const decoded=jswt.verify(userId, 'secretkey');
+    console.log("decodeddddddd",decoded)
        const exp= await Expense.create({
         expense:expense,
         description:description,
         category:category,
-        userId:req.user.id
+        userId: decoded.userId
        // comment:comment
         
        })
