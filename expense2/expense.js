@@ -8,6 +8,9 @@ const submitBtn = document.getElementById("add");
 const totalExpense = document.getElementById("totalExpense")
 const LeaderboardBtn =document.getElementById("leaderboardBtn")
 console.log(LeaderboardBtn,"leaderbtn")
+const paginationDiv = document.getElementById("pagination");
+
+
 
 //leaderboard button click
 LeaderboardBtn.addEventListener("click", async function(e){
@@ -76,12 +79,13 @@ async function loadAllItems() {
 // Load existing data from server on page load
 (async function loadFromServer() {
   alert("hii")
-  const items = await fetchAllItems();
-    totalExpense.textContent = items.length;
+  //const items = await fetchAllItems();
     
   try {
     
     const items = await fetchAllItems();
+    
+    totalExpense.textContent = items.length;
     items.forEach(item => {
       const card = createCard(item.expense, item.description, item.category, item.id);
       cardSection.appendChild(card);
@@ -204,3 +208,70 @@ function escapeHtml(str) {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
 }
+//for pagination
+let currentPage = 1;
+const limit = 2;
+
+async function loadExpenses(page) {
+  alert("hii2")
+  try {var userId = localStorage.getItem("userId");
+    const res = await axios.get(
+  `http://localhost:3000/expense?page=${page}&limit=2`,
+  {
+    headers: {
+      Authorization: localStorage.getItem("userId") // 👈 token
+    }
+  }
+);
+console.log("fjjjfnf0",res.data)
+    showExpenses(res.data.expenses);
+    showPagination(res.data.currentPage, res.data.totalPages);
+
+  } catch (err) {
+    console.log("Error loading expenses", err);
+  }
+}
+
+function showExpenses(expenses) {
+  cardSection.innerHTML = "";
+
+  expenses.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "card";
+    div.innerHTML = `
+      <strong>${item.category}</strong> |
+      ₹${item.expense} |
+      ${item.description}
+    `;
+    cardSection.appendChild(div);
+  });
+}
+
+function showPagination(current, total) {
+  paginationDiv.innerHTML = "";
+
+  if (current > 1) {
+    const prevBtn = document.createElement("button");
+    prevBtn.innerText = "Prev";
+    prevBtn.onclick = () => changePage(current - 1);
+    paginationDiv.appendChild(prevBtn);
+  }
+
+  const span = document.createElement("span");
+  span.innerText = ` Page ${current} of ${total} `;
+  paginationDiv.appendChild(span);
+
+  if (current < total) {
+    const nextBtn = document.createElement("button");
+    nextBtn.innerText = "Next";
+    nextBtn.onclick = () => changePage(current + 1);
+    paginationDiv.appendChild(nextBtn);
+  }
+}
+function changePage(page) {
+  currentPage = page;
+  loadExpenses(currentPage);
+}
+document.addEventListener("DOMContentLoaded", () => {
+  loadExpenses(currentPage);
+});

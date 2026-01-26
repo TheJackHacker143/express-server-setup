@@ -9,19 +9,19 @@
 const addentries=async (req,res)=>{
     try {
         
-        const {expense,description,category,userId}=req.body
-    const decoded=jswt.verify(userId, 'secretkey');
+        const {expense,description,category}=req.body
+    //const decoded=jswt.verify(userId, 'secretkey');
        const exp= await Expense.create({
         expense:expense,
         description:description,
         category:category,
-        userId:decoded.userId
+        userId:req.user.id
        // comment:comment
         
        })
        res.status(201).json(exp)
     } catch (error) {
-        res.status(500).send("unable to entry")
+        res.status(500).send("unable to add expense")
     }
 
 }
@@ -46,16 +46,16 @@ const updateEntry=async (req,res)=>{
     try {
         const {expense,description,category}=req.body
     
-       const exp= await Expense.create({
+       const exp= await Expense.update({
         expense:expense,
         description:description,
         category:category,
         //comment:comment
         
-       })
-       res.status(201).json(exp)
+       }, { where: { id: req.params.id, userId: req.user.id } })
+       res.status(201).json({ message: "Updated" })
     } catch (error) {
-        res.status(500).send("unable to entry")
+        res.status(500).send("unpdte failed")
     }
 
     
@@ -94,8 +94,42 @@ console.log(exp)
   }
 }
 
+const getExpensesWithPagination = async (req, res) => {
+  try {
+    // 1️⃣ page & limit query se lo
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 5;
 
- module.exports={addentries,updateEntry,deleteEntry,reteriveEntry}
+    // 2️⃣ offset calculate karo
+    const offset = (page - 1) * limit;
+
+    // 3️⃣ DB se paginated data + count
+    const { count, rows } = await Expense.findAndCountAll({
+      where: { userId: req.user.id },   // auth middleware se
+      limit: limit,
+      offset: offset,
+      order: [["createdAt", "DESC"]],
+    });
+
+    // 4️⃣ response bhejo
+    res.status(200).json({
+      expenses: rows,
+      currentPage: page,
+      totalPages: Math.ceil(count / limit),
+      totalItems: count,
+    });
+
+  } catch (err) {
+    console.log(" error is",err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+//module.exports = { getExpensesWithPagination };
+
+
+
+ module.exports={addentries,updateEntry,deleteEntry,reteriveEntry,getExpensesWithPagination}
 
 
 
