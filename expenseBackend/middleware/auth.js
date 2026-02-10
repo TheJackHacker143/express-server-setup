@@ -4,7 +4,8 @@ const User = require('../models/UsersTable')
 const aunthenticate= async(req,res,next)=>{
 try {
     console.log("qqqqq",req.headers)
-        const token=req.params.userId|| req.headers.authorization;
+        const token=req.headers.authorization;
+        console.log("tokenllll",req.params.userId)
         console.log("aaa",token)
         const decoded=jswt.verify(token, 'secretkey');
         console.log("decoded",decoded)

@@ -1,3 +1,5 @@
+
+
 // ================= DOM =================
 const form = document.getElementById("postForm");
 const expense = document.getElementById("expense");
@@ -8,6 +10,106 @@ const submitBtn = document.getElementById("add");
 const totalExpense = document.getElementById("totalExpense");
 const paginationDiv = document.getElementById("pagination");
 const limitSelect = document.getElementById("limitSelect");
+const premiumBtn=document.getElementById("premium");
+const leaderboardBtn=document.getElementById("leaderboardBtn");
+const ai=document.getElementById("ai");
+const geminiAiForm=document.getElementById("gemini-form");
+const downloadBtn=document.getElementById("downloadBtn");
+//const geminiText=document.getElementById("ask gemini")
+(async (params) => {
+  
+
+try {
+  const premiumResponse= await axios.get(`http://localhost:3000/premium/updateStatus/${localStorage.getItem("id")}`)
+    console.log("Premium status updated:", premiumResponse.data);
+     var isPremium=premiumResponse.data.user.isPremiumUser  
+     if(isPremium){
+      premiumBtn.style.display="none";
+     }
+     else{
+leaderboardBtn.style.display="none";
+ai.style.display="none";
+geminiAiForm.style.display="none";
+downloadBtn.style.display="none";
+//geminiText.style.display="none";
+     }
+
+} catch (error) {
+  console.log("error in expenjse.js".error);
+}
+})()
+premiumBtn.addEventListener("click", async () => {
+  try {
+    window.location.href =`http://localhost:3000?id=${localStorage.getItem("id")}`
+  
+
+  } catch (err) {
+    console.error(err);
+    alert("TRANSACTION FAILED ❌");
+  }
+});
+function download(){
+  alert("downloading file")
+  const userId=localStorage.getItem("userId")
+  const id=localStorage.getItem("id")
+    axios.get(`http://localhost:3000/expense/download?id=${id}`, { headers: {"authorization" : userId} })
+    .then((response) => {
+      console.log("response from download",response)
+      alert("enter something in console to download file","dhfhfh")
+       
+        if(response.status === 200){
+          console.log("file url:",34, response.data.downloadUrl)
+            //the bcakend is essentially sending a download link
+            //  which if we open in browser, the file would download
+            var a = document.createElement("a");
+            a.href = response.data.downloadUrl;
+            a.download = 'myexpense.txt';
+            a.click();
+             } else {
+            throw new Error(response.data.message)
+        }
+
+    })
+    .catch((err) => {
+        //showError(err) 
+        console.log(err,"shshsh")
+    });
+}
+
+//leaderboard button click
+leaderboardBtn.addEventListener("click", async function(e){
+e.preventDefault();
+alert("leader board showing")
+try {
+  const leaderBoard=await loadAllItems()
+  console.log(leaderBoard)
+  var sortUser=leaderBoard.map((user)=>{
+    let x=0
+    user.totalExpense=0
+    user.Expenses.map((items)=>{
+   x=parseInt(items.expense)
+    user.totalExpense+=x
+    })    
+return user   
+  })
+  sortUser.sort((a, b) => b.totalExpense - a.totalExpense);
+
+  console.log(sortUser,"kskskksks")
+  for(let i=0;i<sortUser.length;i++){
+    const li=document.createElement("li");
+    li.innerText=`User:${sortUser[i].name} Total Expense:${sortUser[i].totalExpense}`;
+    document.getElementById("leaderboardList").appendChild(li);
+  }
+} catch (error) {
+  console.log(error.message)
+}
+})
+async function loadAllItems() {
+  const res = await axios.get("http://localhost:3000/users");
+  return res.data; // array
+}
+
+
 
 // ================= STATE =================
 let currentPage = 1;

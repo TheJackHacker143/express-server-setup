@@ -14,7 +14,12 @@ unique:true
     password:{
 type:DataTypes.STRING,
 allowNull:true
-    }
+    },
+    isPremiumUser: {
+  type: DataTypes.BOOLEAN,
+  defaultValue: false
+}
+
 })
 console.log("users table created")
 module.exports=Users;

@@ -83,9 +83,9 @@ const checkEntry = async (req, res) => {
 
     //  Login success
     return res.status(200).json({
-      name:users.name,
-      email:users.email,
-      password:users.password,
+      name:user.name,
+      email:user.email,
+      password:user.password,
       id: user.id,
       success: true,
       message: "User logged in successfully",

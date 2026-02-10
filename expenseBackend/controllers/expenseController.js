@@ -1,6 +1,10 @@
  const db=require("../dbconnection")
  const Expense= require("../models/expense")
+ const User= require("../models/UsersTable")
  const jswt= require('jsonwebtoken');
+//  const { BlobServiceClient } = require('@azure/storage-blob');
+// const { v1: uuidv1} = require('uuid');
+
  //const Identitycard=require("../models/identityCard")
  //const Student1= require("../models/students1")
 //const UserName = require("../models/userName");
@@ -127,10 +131,141 @@ const getExpensesWithPagination = async (req, res) => {
 };
 
 //module.exports = { getExpensesWithPagination };
+// const { BlobServiceClient } = require("@azure/storage-blob");
+// const { v1: uuidv1 } = require("uuid");
+// //const User = require("../models/User"); // apna path check kar lena
+
+// const downloadExpenses = async (req, res) => {
+//   try {
+//     const queryId = Number(req.query.id);
+
+//     // ✅ user fetch
+//     const user = await User.findOne({ where: { id: queryId } });
+
+//     if (!user) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "User not found",
+//       });
+//     }
+
+//     // ✅ premium check
+//     if (!user.isPremiumUser) {
+//       return res.status(401).json({
+//         success: false,
+//         message: "User is not a premium user",
+//       });
+//     }
+
+//     // ✅ Azure connection
+//     const blobServiceClient = BlobServiceClient.fromConnectionString(
+//       process.env.AZURE_STORAGE_CONNECTION_STRING
+//     );
+
+//     // ✅ container (lowercase + already public from portal)
+//     const containerName = "prasadyash549yahooexpensetracker";
+//     const containerClient =
+//       blobServiceClient.getContainerClient(containerName);
+
+//     // ✅ container exists check
+//     const exists = await containerClient.exists();
+//     if (!exists) {
+//       await containerClient.create();
+//       console.log("Container created");
+//     }
+
+//     // ✅ blob
+//     const blobName = `expenses-${uuidv1()}.txt`;
+//     const blockBlobClient =
+//       containerClient.getBlockBlobClient(blobName);
+
+//     // ✅ data
+//     const expenses = await user.getExpenses();
+//     const data = JSON.stringify(expenses);
+
+//     // ✅ upload
+//     await blockBlobClient.upload(data, Buffer.byteLength(data));
+
+//     // ✅ public URL (download will work)
+//     const fileUrl = `https://demostoragejagan123.blob.core.windows.net/${containerName}/${blobName}`;
+
+//     return res.status(201).json({
+//       success: true,
+//       fileUrl,
+//     });
+//   } catch (err) {
+//     console.error("Download error:", err);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Something went wrong",
+//     });
+//   }
+// };
+
+const { S3Client, PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const { v4: uuidv4 } = require("uuid");
+const s3 = new S3Client({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
+});
+const uploadToS3 = async (data, fileName) => {
+  const command = new PutObjectCommand({
+    Bucket: process.env.AWS_BUCKET_NAME,
+    Key: fileName,
+    Body: data,
+    ContentType: "text/csv",
+  });
+
+  await s3.send(command);
+};
+const generateDownloadUrl = async (fileName) => {
+  const command = new GetObjectCommand({
+    Bucket: process.env.AWS_BUCKET_NAME,
+    Key: fileName,
+  });
+
+  const signedUrl = await getSignedUrl(s3, command, {
+    expiresIn: 60, // 60 seconds
+  });
+
+  return signedUrl;
+};
+
+const downloadExpenses = async (req, res) => {
+  const queryId = Number(req.query.id);
+  try {
+    const user = req.user;
+    console.log("user in download expenses", user);
+console.log("query id is", user.isPremiumUser)
+    if (!user.isPremiumUser) {
+      return res.status(401).json({ message: "Not a premium user" });
+    }
+
+    const expenses = await user.getExpenses();
+    console.log(1)
+    const fileName = `expenses/${user.id}/${Date.now()}.txt`;
+console.log(2)
+    await uploadToS3(JSON.stringify(expenses), fileName);
+ console.log(3)
+    const downloadUrl = await generateDownloadUrl(fileName);
+console.log(4)
+    res.status(200).json({
+      success: true,
+      downloadUrl,
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err });
+  }
+};
 
 
-
- module.exports={addentries,updateEntry,deleteEntry,reteriveEntry,getExpensesWithPagination}
+//module.exports = { downloadExpenses };
+ module.exports={addentries,updateEntry,deleteEntry,reteriveEntry,getExpensesWithPagination,downloadExpenses}
 
 
 

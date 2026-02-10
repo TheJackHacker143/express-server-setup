@@ -6,6 +6,8 @@ const router=express.Router()
 //const { getExpensesWithPagination } = require("../controllers/expenseController");
 
 router.post("/",expensecontroller.addentries)
+router.get("/download",aunthenticate, expensecontroller.downloadExpenses)
+
 router.put("/:id",aunthenticate,expensecontroller.updateEntry)
 router.delete("/:id",expensecontroller.deleteEntry)
 router.get("/",aunthenticate,expensecontroller.getExpensesWithPagination)
