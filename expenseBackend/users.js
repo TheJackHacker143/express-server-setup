@@ -5,7 +5,7 @@ require("dotenv").config();
 //const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const axios = require('axios');
+//const axios = require('axios');
 const path = require('path');
 const paymentRoutes = require('../Cashfree_update_on_5.0.8/routes/paymentRoutes');
 
@@ -16,7 +16,7 @@ const expenseRoutes=require("./routers/expenseRoutes")
 require("./models/userToexpense");
 //const dotenv = require("dotenv");
 //const path = require("path");
-const { GoogleGenAI } = require("@google/genai");
+//const { GoogleGenAI } = require("@google/genai");
 require("./models/ForgotPasswordRequests")
 require("./models/userToForgotPasswordRequests")
 const morgan = require('morgan');
