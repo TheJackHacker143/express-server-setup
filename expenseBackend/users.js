@@ -23,11 +23,11 @@ const morgan = require('morgan');
 const fs=require('fs');
 const accessLogStream=fs.createWriteStream(path.join(__dirname,'access.log'),{flags:'a'})
 //dotenv.config();
-const OpenAI = require("openai");
+//const OpenAI = require("openai");
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+// const openai = new OpenAI({
+//   apiKey: process.env.OPENAI_API_KEY
+// });
 
 //require("./models")
 app.use(express.json());
