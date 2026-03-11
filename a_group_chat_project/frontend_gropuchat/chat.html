@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chat Window</title>
+<link rel="stylesheet" href="chat.css">
+</head>
+
+<body>
+
+<div class="app-container">
+
+    <!-- LEFT SIDEBAR -->
+    <div class="sidebar">
+
+        <div class="search-box">
+            <input type="text" id="searchEmail" placeholder="Search by email">
+            <button id="searchButton" onclick="search(this)">Search</button>
+        </div>
+
+        <div id="listusers" class="chat-list"></div>
+
+    </div>
+
+
+    <!-- RIGHT CHAT AREA -->
+    <div class="chat-container">
+
+        <div class="chat-header">
+            <div class="user-info">
+                <div class="avatar">U</div>
+                <div>
+                    <div class="name" id="name">Select Chat</div>
+                    <div class="status">online</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-messages"></div>
+
+<!-- AI SMART REPLIES -->
+<div id="smartReplies"></div>
+
+<!-- AI PREDICTIVE TYPING -->
+<div id="aiSuggestions"></div>
+
+<div class="chat-input">
+    <input type="text" placeholder="Type message...">
+
+    <!-- img add -->
+    <input id="image" type="file" placeholder="img">
+
+    <button>Send</button>
+</div>
+    </div>
+
+</div>
+
+<!-- SOCKET.IO CDN -->
+<script src="https://cdn.socket.io/4.8.3/socket.io.min.js"></script>
+
+<!-- AXIOS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<!-- YOUR JS -->
+<script src="chat.js"></script>
+
+</body>
+</html>
